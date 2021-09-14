@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <title>Edit Line Item</title>
+    </head>
+    <body>
+        <div class="row">
+            <h1>Edit Line Item Info </h1>
+        <div class="col-md-3 offset-md-10 top-0 end-0">
+            <a href="/dashboard">Dashboard</a> | 
+            <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                {% if messages %}
+                    <ul class="messages">    
+                        {% for message in messages %}    
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <form action="/item/{{this_book.id}}/change" method="POST">
+                    {% csrf_token %}
+                    <label for="barcode">Barcode: </label>
+                    <input name="barcode" type="text" value="{{this_book.barcode}}">
+                    <label for="item_name">Item Name:</label>
+                    <input name="item_name" type="text" value="{{this_book.item_name}}">
+                    <label for="order_number">Order Number:</label>
+                    <input name="order_number" type="number" value="{{this_book.order_number}}">
+                    <label for="days_overdue">Days Overdue:</label>
+                    <input name="days_overdue" type="number" value="{{this_book.days_overdue}}">
+                    <label for="quantity">Quantity:</label>
+                    <input name="quantity" type="number" value="{{this_book.quantity}}">
+                    <label for="location">Location Number:</label>
+                    <input name="location" type="number" value="{{this_book.location}}">
+                    <label for="location_name">Location Name:</label>
+                    <input name="location_name" type="text" value="{{this_book.location_name}}">
+                    <label for="event_name">Event Name:</label>
+                    <input name="event_name" type="text" value="{{this_book.event_name}}">
+                    <label for="comments">Comments:</label>
+                    <input name="comments" type="textbox" value="{{this_book.comments}}">
+                    <p>Added On: {{this_book.created_at}}</p>
+                    <p>Updated On: {{this_book.updated_at}}</p>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="row">
+                    {% for user in this_book.users_tracking.all %}
+                        <form action="/{{this_book.id}}/untrack_item_page" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Stop Tracking</button> 
+                        </form>
+                    {% endfor %}
+                    {% for user in all_users %}
+                        {% if user not in this_book.users_tracking.all %}
+                        <form action="/{{this_book.id}}/track" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Track Item</button> 
+                        </form>
+                        {% endif %}
+                    {% endfor %}
+                    <form action="/item/{{this_book.id}}/delete" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Delete item</button> 
+                    </form>
+                <a href="/dashboard"><button>Cancel</button></a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <title>Tracked Items</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <h1>{{this_user.first_name}}'s Tracked Items  </h1>
+                <div class="col-md-3 offset-md-10 top-0 end-0">
+                    <a href="/dashboard">Dashboard</a> | 
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+            <div>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>Barcode</th>
+                        <th>Item name</th>
+                        <th>Order</th>
+                        <th>Days Overdue</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Location Name</th>
+                        <th>Event Name</th>
+                        <th>Comments</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for Book in tracking %}
+                    <tr>
+                        <td>{{Book.barcode}}</td>
+                        <td>{{Book.item_name}}</td>
+                        <td>{{Book.order_number}}</td>
+                        <td>{{Book.days_overdue}}</td>
+                        <td>{{Book.quantity}}</td>
+                        <td>{{Book.location}}</td>
+                        <td>{{Book.location_name}}</td>
+                        <td>{{Book.event_name}}</td>
+                        <td>{{Book.comments}}</td>
+                        <td><a href="/item/{{Book.id}}/edit">Edit</a>  
+                            <form action="/{{Book.id}}/{{this_user.id}}/untrack_tracked_page" method="POST">
+                                {% csrf_token %}
+                                    <button type="submit" class="btn btn-link">Stop Tracking</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
